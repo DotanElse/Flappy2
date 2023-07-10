@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 public class Bird {
-    private static final int GRAVITY = -10;
+    private static final int GRAVITY = -15;
     private static final int SPEED = 130;
     private Vector3 position;
     private Vector3 velocity;
