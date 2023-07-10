@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.dotan.game.PreferencesManager;
 import com.dotan.game.sprites.Bird;
 import com.dotan.game.sprites.Tube;
 import com.dotan.game.Flappy2;
@@ -16,12 +17,14 @@ public class PlayState extends State {
     private Texture bg;
     private Texture ground;
     private Vector2 groundPos1, groundPos2;
+    private int currScore;
 
     private Array<Tube> tubes;
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
         bird = new Bird(50, 200);
+        currScore = 0;
         cam.setToOrtho(false, Flappy2.WIDTH/2, Flappy2.HEIGHT/2);
         bg = new Texture("bg.png");
         ground = new Texture("ground.png");
@@ -52,10 +55,11 @@ public class PlayState extends State {
             Tube tube = tubes.get(i);
             if(cam.position.x - (cam.viewportWidth / 2) > tube.getPosTopTube().x + tube.getTopTube().getWidth()){
                 tube.reposition(tube.getPosTopTube().x + ((Tube.TUBE_WIDTH + TUBE_SPACING) * TUBE_COUNT));
+                currScore+=1;
             }
 
             if(tube.collides(bird.getBounds())){
-                gsm.set(new PlayState(gsm));
+                endGame();
             }
         }
 
@@ -65,8 +69,19 @@ public class PlayState extends State {
             groundPos2.add(ground.getWidth() * 2, 0);
 
         if(bird.getPosition().y < ground.getHeight() + (-70))
-            gsm.set(new PlayState(gsm));
+            endGame();
         cam.update();
+    }
+
+    private void endGame(){
+        PreferencesManager preferencesManager = new PreferencesManager();
+        int previousHighScore = preferencesManager.getHighScore();
+
+        if (currScore > previousHighScore) {
+            preferencesManager.setHighScore(currScore);
+        }
+
+        gsm.set(new PlayState(gsm));
     }
 
     @Override
@@ -93,6 +108,6 @@ public class PlayState extends State {
         ground.dispose();
         for(Tube tube : tubes)
             tube.dispose();
-        System.out.println("Play state disposed");
+        System.out.println("Play state disposed, score: " + currScore);
     }
 }
