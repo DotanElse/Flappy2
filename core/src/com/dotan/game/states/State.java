@@ -8,10 +8,13 @@ public abstract class State {
     protected OrthographicCamera cam;
     protected Vector3 mouse;
     protected GameStateManager gsm;
+    protected OrthographicCamera guiCam;
+
 
     protected State(GameStateManager gsm) {
         this.gsm = gsm;
         cam = new OrthographicCamera();
+        guiCam = new OrthographicCamera();
         mouse = new Vector3();
     }
 
