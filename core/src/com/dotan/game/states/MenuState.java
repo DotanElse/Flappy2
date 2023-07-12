@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.dotan.game.Flappy2;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.dotan.game.PreferencesManager;
@@ -14,6 +15,8 @@ public class MenuState extends State{
     private SpriteBatch spriteBatch;
     private BitmapFont font;
     private int highScore;
+    private float buttonX;
+    private float buttonY;
 
     public MenuState(GameStateManager gsm) {
         super(gsm);
@@ -27,12 +30,24 @@ public class MenuState extends State{
         font.getData().setScale(0.5f);
         font.setColor(Color.WHITE);
         System.out.println("0");
+        buttonX = (cam.viewportWidth - playButton.getWidth())/2;
+        buttonY = (cam.viewportHeight - playButton.getHeight())/2;
     }
 
     @Override
     public void handleInput() {
-        if(Gdx.input.justTouched()){
-            gsm.set(new PlayState(gsm));
+        if (Gdx.input.justTouched()) {
+            // Unproject touch coordinates based on the camera's projection matrix
+            Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            cam.unproject(touchPos);
+
+            float touchX = touchPos.x;
+            float touchY = touchPos.y;
+
+            if (touchX >= buttonX && touchX <= buttonX + playButton.getWidth() &&
+                    touchY >= buttonY && touchY <= buttonY + playButton.getHeight()) {
+                gsm.set(new PlayState(gsm));
+            }
         }
     }
 
@@ -49,7 +64,7 @@ public class MenuState extends State{
 
         // Render high score
         font.draw(sb, "High Score: " + highScore, 0, 400 - 10);
-        sb.draw(playButton, cam.position.x - playButton.getWidth() / 2, cam.position.y );
+        sb.draw(playButton, buttonX, buttonY);
         sb.end();
     }
 
