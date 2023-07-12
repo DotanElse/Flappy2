@@ -12,11 +12,11 @@ public class Flappy2 extends ApplicationAdapter {
 	public static final int WIDTH = 480;
 	public static final int HEIGHT = 800;
 	public static final String TITLE = "Flappy Bird";
+	public static Music bgMusic;
 
 	private GameStateManager gsm;
 	private SpriteBatch batch;
 
-	private Music bgMusic;
 
 	@Override
 	public void create () {
@@ -24,7 +24,6 @@ public class Flappy2 extends ApplicationAdapter {
 		gsm = new GameStateManager();
 		bgMusic = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
 		bgMusic.setLooping(true);
-		bgMusic.setVolume(0.05f);
 		bgMusic.play();
 		gsm.push(new MenuState(gsm));
 

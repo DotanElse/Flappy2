@@ -14,7 +14,7 @@ import com.dotan.game.sprites.Tube;
 import com.dotan.game.Flappy2;
 
 public class PlayState extends State {
-    private static final int TUBE_SPACING = 120;
+    private static final int TUBE_SPACING = 130;
     private static final int TUBE_COUNT = 4;
     private Bird bird;
     private Texture bg;
